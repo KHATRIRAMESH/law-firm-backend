@@ -6,4 +6,4 @@ router.get("/getposts", getPosts);
 router.post("/createpost", createPost);
 router.put("/updatepost", updatePost);
 router.delete("/deletepost", deletePost);
-export default router;
+export default router; 

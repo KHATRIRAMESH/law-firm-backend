@@ -1,12 +1,14 @@
 import Admin from "../models/admin.model.js";
+import { errorHandler } from "../utils/error.js";
 
 //Sign in Controller
 export const signin = async (req, res, next) => {
   // res.json({ message: "welcome admin" });
   console.log(req.body);
   const { username, password } = req.body;
+  console.log(username, password);
 
-  if (!username || !password || username === "" || password == null) {
+  if (!username || !password) {
     return next(errorHandler(400, "All fields are required!"));
   }
   try {

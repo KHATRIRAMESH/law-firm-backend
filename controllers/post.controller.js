@@ -42,12 +42,15 @@ export const createPost = async (req, res, next) => {
   }
 };
 
-
-
 export const getPosts = async (req, res, next) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 }); // Sort by most recent first
+    const posts = await Post.find({
+      ...(req.query.slug && { slug: req.query.slug }),
+      ...(req.query.title && { title: req.query.title }),
+    }).sort({ createdAt: -1 }); // Sort by most recent first
     // .populate('userId', 'username'); // If you want to include user details
+
+    console.log(`${posts}`);
 
     const totalPosts = await Post.countDocuments();
     res.status(200).json({

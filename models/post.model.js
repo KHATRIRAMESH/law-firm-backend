@@ -19,10 +19,7 @@ const postSchema = new mongoose.Schema(
       ref: "User",
       required: false,
     },
-    image: {
-      type: String,
-      required: false,
-    },
+
     slug: {
       type: String,
       required: false,
@@ -31,8 +28,9 @@ const postSchema = new mongoose.Schema(
     image: {
       type: String,
       required: false,
-      default: "https://www.lawimperial.com/wp-content/uploads/2019/02/rsz_company_law-300x225.jpg",
-    }
+      default:
+        "https://www.lawimperial.com/wp-content/uploads/2019/02/rsz_company_law-300x225.jpg",
+    },
   },
   {
     timestamps: true,

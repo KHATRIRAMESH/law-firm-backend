@@ -80,31 +80,28 @@ export const deletePost = async (req, res, next) => {
 };
 
 export const updatePost = async (req, res, next) => {
-  // console.log(req.user)
-  // if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-  //   return next(
-  //     errorHandler(403, "You are not authorized to update this post")
-  //   );
-  // }
   
-  const { postId, title, content } = req.body;
-  console.log(postId, title, content)
 
+  console.log(req.body)
+  const slug = req.body.data.title.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
+
+console.log(slug)
   try {
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.postId,
       {
         $set: {
-          title: req.body.title,
-          content: req.body.content,
-          category: req.body.category,
-          image: req.body.image,
+          title: req.body.data.title,
+          content: req.body.data.content,
+          slug
         },
       },
       { new: true }
     );
     res.status(200).json(updatedPost);
+    console.log("updated successfully");
   } catch (error) {
     next(error);
   }
+
 };

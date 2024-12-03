@@ -47,10 +47,11 @@ export const getPosts = async (req, res, next) => {
     const posts = await Post.find({
       ...(req.query.slug && { slug: req.query.slug }),
       ...(req.query.title && { title: req.query.title }),
+      ...(req.query.postId && { _id: req.query.postId }),
     }).sort({ createdAt: -1 }); // Sort by most recent first
     // .populate('userId', 'username'); // If you want to include user details
 
-    console.log(`${posts}`);
+    // console.log(`${posts}`);
 
     const totalPosts = await Post.countDocuments();
     res.status(200).json({
@@ -63,11 +64,12 @@ export const getPosts = async (req, res, next) => {
 };
 
 export const deletePost = async (req, res, next) => {
-  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-    return next(
-      errorHandler(403, "You are not authorized to delete this post")
-    );
-  }
+  // console.log(req.params)
+  // if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+  //   return next(
+  //     errorHandler(403, "You are not authorized to delete this post")
+  //   );
+  // }
 
   try {
     await Post.findByIdAndDelete(req.params.postId);
@@ -78,11 +80,15 @@ export const deletePost = async (req, res, next) => {
 };
 
 export const updatePost = async (req, res, next) => {
-  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-    return next(
-      errorHandler(403, "You are not authorized to update this post")
-    );
-  }
+  // console.log(req.user)
+  // if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+  //   return next(
+  //     errorHandler(403, "You are not authorized to update this post")
+  //   );
+  // }
+  
+  const { postId, title, content } = req.body;
+  console.log(postId, title, content)
 
   try {
     const updatedPost = await Post.findByIdAndUpdate(

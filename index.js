@@ -4,8 +4,10 @@ import adminRoute from "./routes/admin.route.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import postRoute from "./routes/post.route.js";
+import emailRoute from "./routes/email.route.js";
 import cors from "cors";
-
+import bodyParser from "body-parser";
+// import nodemailer from "nodemailer";
 dotenv.config();
 
 //mongoose connect
@@ -25,6 +27,12 @@ const corsOptions = {
   origin: "http://localhost:5173", // replace with your frontend URL
 };
 
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+
 // Use cors middleware to enable cross-origin requests from your frontend
 app.use(cors(corsOptions));
 
@@ -41,6 +49,10 @@ app.use("/api/admin", adminRoute);
 
 //blog route
 app.use("/api/post", postRoute);
+
+
+//email route
+app.use("/api/user", emailRoute);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

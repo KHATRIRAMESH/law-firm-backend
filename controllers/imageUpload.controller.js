@@ -11,6 +11,7 @@ export const uploadFile = async (req, res, next) => {
       const cldRes = await uploadOnCloudinary(dataURI);
       
     res.json(cldRes);
+    
   } catch (error) {
     console.log(error);
     res.send({

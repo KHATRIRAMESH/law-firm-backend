@@ -69,16 +69,16 @@ export const updateUser = async (req, res, next) => {
 
   const { old_username, new_username, old_password, new_password } = req.body;
 
-  console.log(
-    `old_username:`,
-    old_username,
-    `new_username:`,
-    new_username,
-    `old_password:`,
-    old_password,
-    `new_password:`,
-    new_password
-  );
+  // console.log(
+  //   `old_username:`,
+  //   old_username,
+  //   `new_username:`,
+  //   new_username,
+  //   `old_password:`,
+  //   old_password,
+  //   `new_password:`,
+  //   new_password
+  // );
 
   //need old password to update credentials
   if (!old_password) {

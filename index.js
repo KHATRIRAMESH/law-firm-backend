@@ -14,8 +14,6 @@ import cookieParser from "cookie-parser";
 const app = express();
 app.use(cookieParser());
 
-
-
 //mongoose connect
 mongoose
   .connect(process.env.MONGO)
@@ -29,9 +27,10 @@ app.listen(port, () => {
 });
 
 // Enable CORS for the server to accept requests from your frontend
+// const allowList=["http://localhost:5173"]
 const corsOptions = {
-  origin: "http://localhost:5173", 
-  credentials:true
+  origin: "http://localhost:5173" || "*",
+  credentials: true,
 };
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -64,9 +63,11 @@ app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
   console.log(`error checking`, statusCode, message);
-  res.status(statusCode).json({
+  console.log(`response`,res)
+  const response = res.status(404).json({
     message: message,
     success: false,
     statusCode: statusCode,
   });
+  // console.log(`error responded with status`, response.message,response.statusCode);
 });

@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 //Sign in Controller
 export const signin = async (req, res, next) => {
   // res.json({ message: "welcome admin" });
-  console.log("body",req.body);
+  console.log("body", req.body);
   const { username, password } = req.body;
   // console.log(username, password);
 
@@ -42,7 +42,7 @@ export const signin = async (req, res, next) => {
         httpOnly: true,
         maxAge: 60 * 1000,
       })
-    .json(rest);
+      .json(rest);
   } catch (error) {
     console.log(error);
     next(error);
@@ -61,35 +61,56 @@ export const signOut = (req, res, next) => {
 };
 
 export const updateUser = async (req, res, next) => {
+  console.log(`currentusername:`, req.params);
   console.log("updateUser", req.body);
   // if (req.user._id !== req.params.userId) {
   //   return next(errorHandler(401, "Unauthorized"));
   // }
 
-  if (req.body.password) {
-    if (req.body.password.length < 6) {
+  const { old_username, new_username, old_password, new_password } = req.body;
+
+  console.log(
+    `old_username:`,
+    old_username,
+    `new_username:`,
+    new_username,
+    `old_password:`,
+    old_password,
+    `new_password:`,
+    new_password
+  );
+
+  //need old password to update credentials
+  if (!old_password) {
+    return next(errorHandler(400, "Enter old password to update credentials"));
+  }
+
+  //check new password requirements
+  if (new_password) {
+    if (new_password.length < 6) {
       return next(
         errorHandler(400, "Password must be at least 6 characters long")
       );
     }
   }
 
-  if (req.body.username) {
-    if (req.body.username.length < 7 || req.body.username.length > 20) {
+  //check new username requirements
+  if (new_username) {
+    if (new_username.length < 7 || new_username.length > 20) {
       return next(
         errorHandler(400, "Username must be between 7 and 20 characters long")
       );
     }
 
-    if (req.body.username.includes(" ")) {
+    if (new_username.includes(" ")) {
       return next(errorHandler(400, "Username cannot contain spaces"));
     }
 
-    if (req.body.username !== req.body.username.toLowerCase()) {
+    if (new_username !== new_username.toLowerCase()) {
       return next(errorHandler(400, "Username must be lowercase"));
     }
 
-    if (!req.body.username.match(/^[a-zA-Z0-9]+$/)) {
+    if (!new_username.match(/^[a-zA-Z0-9]+$/)) {
       return next(
         errorHandler(400, "Username must contain only letters and numbers")
       );
@@ -97,14 +118,22 @@ export const updateUser = async (req, res, next) => {
   }
   console.log(`updating..`);
   try {
+    const validUser = await Admin.findOne({ username: old_username });
+    if (!validUser) {
+      return next(errorHandler(404, "User not found!"));
+    }
+
+    if (validUser.password !== old_password) {
+      return next(errorHandler(400, "Invalid old password!"));
+    }
     const updatedUser = await Admin.findByIdAndUpdate(
       req.params.userId,
       {
         $set: {
-          username: req.body.username,
+          username: new_username ? new_username : old_username,
 
           // profilePicture: req.body.profilePicture,
-          password: req.body.password,
+          password: new_password ? new_password : old_password,
         },
       },
       { new: true }

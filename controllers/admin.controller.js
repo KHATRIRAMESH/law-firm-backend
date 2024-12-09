@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 //Sign in Controller
 export const signin = async (req, res, next) => {
   // res.json({ message: "welcome admin" });
-  console.log(req.body);
+  console.log("body",req.body);
   const { username, password } = req.body;
   // console.log(username, password);
 
@@ -18,19 +18,20 @@ export const signin = async (req, res, next) => {
     if (!validUser) {
       return next(errorHandler(404, "User not found!"));
     }
-    console.log("user found")
+    console.log("user found");
 
     if (password !== validUser.password) {
       return next(errorHandler(400, "Invalid credentials!"));
     }
-    console.log(`password matched`)
+    console.log(`password matched`);
 
     const token = jwt.sign(
       {
         id: validUser._id,
         isAdmin: validUser.isAdmin,
       },
-      process.env.JWT_SECRET_KEY
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "1h" }
     );
 
     const { password: pass, ...rest } = validUser._doc;
@@ -39,14 +40,14 @@ export const signin = async (req, res, next) => {
       .status(200)
       .cookie("access_token", token, {
         httpOnly: true,
+        maxAge: 60 * 1000,
       })
-      .json(rest);
+    .json(rest);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     next(error);
   }
 };
-
 
 export const signOut = (req, res, next) => {
   try {
@@ -59,10 +60,8 @@ export const signOut = (req, res, next) => {
   }
 };
 
-
-
 export const updateUser = async (req, res, next) => {
-  console.log("updateUser",req.body)
+  console.log("updateUser", req.body);
   // if (req.user._id !== req.params.userId) {
   //   return next(errorHandler(401, "Unauthorized"));
   // }
@@ -96,14 +95,14 @@ export const updateUser = async (req, res, next) => {
       );
     }
   }
-console.log(`updating..`)
+  console.log(`updating..`);
   try {
     const updatedUser = await Admin.findByIdAndUpdate(
       req.params.userId,
       {
         $set: {
           username: req.body.username,
-         
+
           // profilePicture: req.body.profilePicture,
           password: req.body.password,
         },
@@ -114,7 +113,7 @@ console.log(`updating..`)
     const { password, ...rest } = updatedUser._doc;
 
     res.status(200).json(rest);
-    console.log(`updated successfully`)
+    console.log(`updated successfully`);
   } catch (error) {
     next(error);
   }

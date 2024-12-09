@@ -26,7 +26,7 @@ export const emailHandler = async (req, res, next) => {
     // Send email
     await transporter.sendMail({
       from: email,
-      to: "karnaliyan17@gmail.com", // Your company's email
+      to: process.env.COMPANY_EMAIL, // Your company's email
       subject: `New Contact Form Submission from ${name}`,
       replyTo: email,
       text: `

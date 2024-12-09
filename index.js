@@ -1,14 +1,20 @@
 import express from "express";
-const app = express();
 import adminRoute from "./routes/admin.route.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import postRoute from "./routes/post.route.js";
 import emailRoute from "./routes/email.route.js";
+import fileRoute from "./routes/file.route.js";
 import cors from "cors";
 import bodyParser from "body-parser";
-// import nodemailer from "nodemailer";
 dotenv.config();
+
+import cookieParser from "cookie-parser";
+
+const app = express();
+app.use(cookieParser());
+
+
 
 //mongoose connect
 mongoose
@@ -24,14 +30,12 @@ app.listen(port, () => {
 
 // Enable CORS for the server to accept requests from your frontend
 const corsOptions = {
-  origin: "http://localhost:5173", // replace with your frontend URL
+  origin: "http://localhost:5173", 
+  credentials:true
 };
-
-
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 
 // Use cors middleware to enable cross-origin requests from your frontend
 app.use(cors(corsOptions));
@@ -50,14 +54,16 @@ app.use("/api/admin", adminRoute);
 //blog route
 app.use("/api/post", postRoute);
 
-
 //email route
 app.use("/api/user", emailRoute);
+
+//photo upload route
+app.use("/api/upload", fileRoute);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
-  console.log(`error checking`,statusCode,message);
+  console.log(`error checking`, statusCode, message);
   res.status(statusCode).json({
     message: message,
     success: false,

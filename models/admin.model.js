@@ -14,7 +14,11 @@ const adminSchema = new mongoose.Schema(
   isAdmin: {
     type: Boolean,
     default: false,
-  },
+    },
+    profilepic: {
+    type: String,
+    default: null,
+  }
 });
 
 const Admin = mongoose.model("Admin", adminSchema);

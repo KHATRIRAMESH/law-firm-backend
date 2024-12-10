@@ -1,13 +1,15 @@
 import Post from "../models/post.model.js";
 import { errorHandler } from "../utils/error.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import fs from "fs/promises";
 
 export const createPost = async (req, res, next) => {
   console.log(`file`, req.file);
   
   console.log(`title`, req.body.title);
+
   
-  console.log(`Uploading file`, req.file);
+  console.log(`content`, req.body.content);
   
   if (!req.body.title || !req.body.content) {
     return next(errorHandler(400, "Title and content are required"));
@@ -26,15 +28,31 @@ export const createPost = async (req, res, next) => {
     if (existingPost) {
       return next(errorHandler(400, "A post with this title already exists"));
     }
-
+    
+    //image upload handler
     if (!req.file) {
       throw new Error("No file uploaded");
     }
-    const b64 = Buffer.from(req.file.buffer).toString("base64");
-    let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-    const cldRes = await uploadOnCloudinary(dataURI);
+    // const b64 = Buffer.from(req.file.buffer).toString("base64");
+    // let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+    // const cldRes = await uploadOnCloudinary(dataURI);
+    console.log(`errortesting for file upload:`);
 
+    const filePath = req.file.path;
+    console.log(`file path:`,filePath);
+    const fileData = await fs.readFile(filePath); //Read file into memory
+    console.log(`errortesting for file upload:`);
+    
+    const b64 = fileData.toString("base64");
+    const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+    console.log(`dataURI: ${dataURI}`);
+    const cldRes = await uploadOnCloudinary(dataURI);
+    
     // res.json(cldRes);
+    console.log(`error testing`)
+
+    await fs.unlink(filePath); // Delete the temporary file
+    
     console.log(`imageurl: ${cldRes.url}`);
     // console.log(req.body, req.user.id);
     const newPost = new Post({
@@ -54,6 +72,7 @@ export const createPost = async (req, res, next) => {
     if (error.code === 11000) {
       return next(errorHandler(400, "Duplicate key error"));
     }
+    // console.log(`error: ${error.message}`);
     next(error);
   }
 };

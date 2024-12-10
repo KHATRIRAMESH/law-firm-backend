@@ -28,7 +28,7 @@ mongoose
   // Enable CORS for the server to accept requests from your frontend
   // const allowList=["http://localhost:5173"]
   const corsOptions = {
-    origin: "http://localhost:5173" || "*",
+    origin: "process.env.VERCEL_FRONTEND_URL" || "*",
     credentials: true,
   };
   app.use(cors(corsOptions));

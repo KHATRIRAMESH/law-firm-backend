@@ -1,12 +1,14 @@
 import Post from "../models/post.model.js";
 import { errorHandler } from "../utils/error.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 export const createPost = async (req, res, next) => {
-  console.log(`cookies check`, req.cookies )
-  // if (!req.user || !req.user.isAdmin) {
-  //   return next(errorHandler(403, "Unauthorized"));
-  // }
-
+  console.log(`file`, req.file);
+  
+  console.log(`title`, req.body.title);
+  
+  console.log(`Uploading file`, req.file);
+  
   if (!req.body.title || !req.body.content) {
     return next(errorHandler(400, "Title and content are required"));
   }
@@ -25,10 +27,23 @@ export const createPost = async (req, res, next) => {
       return next(errorHandler(400, "A post with this title already exists"));
     }
 
+    if (!req.file) {
+      throw new Error("No file uploaded");
+    }
+    const b64 = Buffer.from(req.file.buffer).toString("base64");
+    let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+    const cldRes = await uploadOnCloudinary(dataURI);
+
+    // res.json(cldRes);
+    console.log(`imageurl: ${cldRes.url}`);
     // console.log(req.body, req.user.id);
     const newPost = new Post({
       ...req.body,
-      // userId: req.user.id,
+      image: cldRes.url,
+      // author: req.user._id, // req.user.id,
+
+      // userId: req.user.id,,
+      // createdAt,
       slug,
     });
 

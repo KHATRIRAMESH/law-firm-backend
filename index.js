@@ -25,17 +25,16 @@ mongoose
     console.log(`Server is running on port ${port}`);
   });
   
-  // Enable CORS for the server to accept requests from your frontend
-// const allowList=["http://localhost:5173"]
+  
 const ALLOWED_ORIGINS = [
-  'http://localhost:5173',  // Local development frontend
-  process.env.VERCEL_FRONTEND_URL,  // Deployed Vercel frontend URL
-  // Add any additional frontend URLs you might have
+  'http://localhost:5173', 
+  process.env.VERCEL_FRONTEND_URL,
+  'https://law-redeploy.vercel.app',
+  
 ].filter(Boolean);
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin || ALLOWED_ORIGINS.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -58,12 +57,11 @@ const corsOptions = {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Use cors middleware to enable cross-origin requests from your frontend
 
-app.use(express.json()); // for parsing application/json
-app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
 
-// Create a route that sends a response when visiting the homepage
+
 app.get("/", (req, res) => {
   res.send("<h1>Hello, Express.js Server!</h1>");
 });
@@ -84,7 +82,6 @@ app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
   console.log(`error checking`, statusCode, message);
-  // console.log(`response`,res)
   const response = res.status(404).json({
     message: message,
     success: false,

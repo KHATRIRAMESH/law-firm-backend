@@ -18,19 +18,17 @@ mongoose
   .connect(process.env.MONGO)
   .then(() => console.log(" MongoDB is Connected!"))
   .catch((err) => console.log(err));
-  
-  // Set up the server to listen on port 3000
-  const port = 3000;
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
-  
-  
+
+// Set up the server to listen on port 3000
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
 const ALLOWED_ORIGINS = [
-  'http://localhost:5173', 
+  "http://localhost:5173",
   process.env.VERCEL_FRONTEND_URL,
-  'https://law-redeploy.vercel.app',
-  
+  "https://law-redeploy.vercel.app",
 ].filter(Boolean);
 
 const corsOptions = {
@@ -38,29 +36,27 @@ const corsOptions = {
     if (!origin || ALLOWED_ORIGINS.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
-    'Access-Control-Allow-Origin',
-    'Access-Control-Allow-Headers',
-    'Access-Control-Allow-Credentials'
-  ]
+    "Content-Type",
+    "Authorization",
+    "Access-Control-Allow-Origin",
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Credentials",
+  ],
 };
-  app.use(cors(corsOptions));
-  app.use(cookieParser());
+app.use(cors(corsOptions));
+app.use(cookieParser());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); 
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello, Express.js Server!</h1>");
@@ -76,16 +72,15 @@ app.use("/api/post", postRoute);
 app.use("/api/user", emailRoute);
 
 //photo upload route
-app.use("/api/upload", fileRoute);
+// app.use("/api/upload", fileRoute);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
   console.log(`error checking`, statusCode, message);
-  const response = res.status(404).json({
+  res.status(404).json({
     message: message,
     success: false,
     statusCode: statusCode,
   });
-  // console.log(`error responded with status`, response.message,response.statusCode);
 });

@@ -4,7 +4,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import fs from "fs/promises";
 
 export const createPost = async (req, res, next) => {
-  console.log(`file`, req.file);
+  // console.log(`file`, req.file);
   
   console.log(`title`, req.body.title);
 
@@ -39,13 +39,14 @@ export const createPost = async (req, res, next) => {
     console.log(`errortesting for file upload:`);
 
     const filePath = req.file.path;
-    console.log(`file path:`,filePath);
+    console.log(`file path:`, filePath);
+    // console.log(`)
     const fileData = await fs.readFile(filePath); //Read file into memory
     console.log(`errortesting for file upload:`);
     
     const b64 = fileData.toString("base64");
     const dataURI = `data:${req.file.mimetype};base64,${b64}`;
-    console.log(`dataURI: ${dataURI}`);
+    // console.log(`dataURI: ${dataURI}`);
     const cldRes = await uploadOnCloudinary(dataURI);
     
     // res.json(cldRes);

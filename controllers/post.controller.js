@@ -38,13 +38,13 @@ export const createPost = async (req, res, next) => {
     // const cldRes = await uploadOnCloudinary(dataURI);
     console.log(`errortesting for file upload:`);
 
-    const filePath = req.file.path;
-    console.log(`file path:`, filePath);
+    // const filePath = req.file.path;
+    // console.log(`file path:`, filePath);
     // console.log(`)
-    const fileData = await fs.readFile(filePath); //Read file into memory
-    console.log(`errortesting for file upload:`);
+    // const fileData = await fs.readFile(filePath); //Read file into memory
+    // console.log(`errortesting for file upload:`);
     
-    const b64 = fileData.toString("base64");
+    const b64 = req.file.buffer.toString("base64");
     const dataURI = `data:${req.file.mimetype};base64,${b64}`;
     // console.log(`dataURI: ${dataURI}`);
     const cldRes = await uploadOnCloudinary(dataURI);
@@ -52,7 +52,7 @@ export const createPost = async (req, res, next) => {
     // res.json(cldRes);
     console.log(`error testing`)
 
-    await fs.unlink(filePath); // Delete the temporary file
+    // await fs.unlink(filePath); // Delete the temporary file
     
     console.log(`imageurl: ${cldRes.url}`);
     // console.log(req.body, req.user.id);

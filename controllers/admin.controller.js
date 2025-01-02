@@ -7,7 +7,7 @@ export const signin = async (req, res, next) => {
   // res.json({ message: "welcome admin" });
   console.log("body", req.body);
   const { username, password } = req.body;
-  // console.log(username, password);
+  console.log(username, password);
 
   if (!username || !password) {
     return next(errorHandler(400, "All fields are required!"));

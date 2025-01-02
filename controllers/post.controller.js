@@ -54,7 +54,7 @@ export const createPost = async (req, res, next) => {
 
     // await fs.unlink(filePath); // Delete the temporary file
     
-    console.log(`imageurl: ${cldRes.url}`);
+    // console.log(`imageurl: ${cldRes.url}`);
     // console.log(req.body, req.user.id);
     const newPost = new Post({
       ...req.body,

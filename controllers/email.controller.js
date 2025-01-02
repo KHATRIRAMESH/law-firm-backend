@@ -1,11 +1,12 @@
 import nodemailer from "nodemailer";
 import { errorHandler } from "../utils/error.js";
+import Email from "../models/email.model.js";
 
 import dotenv from "dotenv";
 
 dotenv.config();
 
-export const emailHandler = async (req, res, next) => {
+export const postEmailHandler = async (req, res, next) => {
   const { name, email, message, phone } = req.body;
 
   if (!name || !email || !message) {
@@ -44,7 +45,12 @@ export const emailHandler = async (req, res, next) => {
       `,
     });
 
-    res.status(200).json({ message: "Email sent successfully" });
+    // console.log(req.body);
+    const newEmail = new Email(req.body);
+    // console.log(newEmail)
+    const savedEmail = await newEmail.save();
+
+    res.status(200).json({savedEmail, message: "Email sent successfully" });
   } catch (error) {
     console.error("Email send error:", error);
     next(errorHandler(500, "Failed to send email"));

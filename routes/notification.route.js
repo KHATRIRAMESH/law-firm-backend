@@ -3,7 +3,7 @@ import { createNotification } from '../controllers/notification.contoller.js';
 
 
 const router = express.Router();
-router.post("/postNotification", createNotification)
+router.get("/postNotification", createNotification)
 // console.log(router)
 
 export default router;

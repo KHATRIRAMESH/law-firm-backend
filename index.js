@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import postRoute from "./routes/post.route.js";
 import emailRoute from "./routes/email.route.js";
-import fileRoute from "./routes/file.route.js";
+import notificationRoute from "./routes/notification.route.js";
 import cors from "cors";
 import bodyParser from "body-parser";
 dotenv.config();
@@ -72,8 +72,8 @@ app.use("/api/post", postRoute);
 //email route
 app.use("/api/user", emailRoute);
 
-//photo upload route
-// app.use("/api/upload", fileRoute);
+//notification route
+app.use("/api/notificaton", notificationRoute);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

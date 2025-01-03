@@ -17,10 +17,15 @@ const emailSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isUnRead: {
+      type: Boolean,
+      default: true,
+    }
   },
   {
     timestamps: true,
-  }
+  },
+  
 );
 
 const Email = mongoose.model("Email", emailSchema);

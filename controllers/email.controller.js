@@ -47,8 +47,8 @@ export const postEmailHandler = async (req, res, next) => {
 
     // console.log(req.body);
     const newEmail = new Email(req.body);
-    // console.log(newEmail)
     const savedEmail = await newEmail.save();
+    console.log(savedEmail)
 
     res.status(200).json({savedEmail, message: "Email sent successfully" });
   } catch (error) {

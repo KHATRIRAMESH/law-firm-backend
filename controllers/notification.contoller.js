@@ -2,7 +2,7 @@ import Notification from "../models/email.model.js";
 import { errorHandler } from "../utils/error.js";
 
 export const createNotification = async (req, res, next) => {
-  console.log("createNotification");
+  // console.log("createNotification");
 
   // const { message } = req.body;
   // console.log(message);
